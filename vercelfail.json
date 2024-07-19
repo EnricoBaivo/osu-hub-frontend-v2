@@ -1,0 +1,8 @@
+{
+    "functions": {
+      "/api/trpc/beatmapset.getByID": {
+        "maxDuration": 300
+      }
+     
+    }
+  }

@@ -1,0 +1,114 @@
+"use client";
+import { type InfoNodgesProps } from "../UI/InfoNodge/InfoNodges";
+import ColoredSuccedStatus, {
+  type ColoredSuccedStatusProps,
+} from "./ColoredSuccedStatus/ColoredSuccedStatus";
+import {
+  type DifficultyAttributesOverlayProps,
+} from "./DifficultyAttributesOverlay/DifficultyAttributesOverlay";
+
+import { motion } from "framer-motion";
+import ScoreBeatmapFooter, { type ScoreBeatmapFooterProps } from "./ScoreBeatmapFooter";
+import { FallBackImage } from "../UI/OsuImage/FallbackImage";
+import BeatmapBannerBody from "./ScoreBannerBody";
+import { useState } from "react";
+import { beatmapMetaDataType } from "@/hooks/useAudio";
+
+
+export interface ScoreBeatmapBannerProps {
+  scoreBeatmapFooterData: ScoreBeatmapFooterProps;
+  scoreBeatmapBannerSuccedStatusData: ColoredSuccedStatusProps;
+  DifficultyAttributesOverlay: DifficultyAttributesOverlayProps;
+  infoNodges: InfoNodgesProps;
+  score_id: number;
+  score_type: string;
+  beatmapCoverCard: string;
+  reached_rank: string;
+  showDetails: boolean;
+  beatmapset_video: boolean | null | undefined;
+  preview_url: string | null | undefined;
+  beatmapMetaData: beatmapMetaDataType
+}
+const BeatmapBannerWrapper = (props: {
+  DifficultyAttributesOverlay: DifficultyAttributesOverlayProps,
+  infoNodges: InfoNodgesProps, score_id: number, reached_rank: string,
+  score_type: string,
+  scoreBeatmapFooterData: ScoreBeatmapFooterProps,
+  beatmapMetaData: beatmapMetaDataType,
+  isOnScore: boolean
+
+}) => {
+
+  return <div
+    className="flex w-full h-full flex-col"
+  >
+    <BeatmapBannerBody
+      beatmapMetaData={props.beatmapMetaData}
+      isOnScore={props.isOnScore}
+      DifficultyAttributesOverlay={props.DifficultyAttributesOverlay}
+      infoNodges={props.infoNodges}
+      score_id={props.score_id}
+      reached_rank={props.reached_rank}
+    />
+    <ScoreBeatmapFooter
+      score_type={props.score_type}
+      score_id={props.score_id}
+      scoreHitData={props.scoreBeatmapFooterData.scoreHitData}
+      scoreData={props.scoreBeatmapFooterData.scoreData}
+      scorePredictionData={props.scoreBeatmapFooterData.scorePredictionData}
+      scoreModsData={props.scoreBeatmapFooterData.scoreModsData}
+      date={props.scoreBeatmapFooterData.date}
+    />
+  </div >
+}
+
+const ScoreBeatmapBanner = (props: ScoreBeatmapBannerProps) => {
+  const [isOnScore, setIsOnScore] = useState(false)
+  return (
+    <motion.div
+      onMouseEnter={() => setIsOnScore(true)}
+      onMouseLeave={() => setIsOnScore(false)}
+      className="relative flex w-[900px] h-[700px] rounded-4xl  shadow-xl border-slate-700 border  ">
+      <div className="relative flex w-full overflow-hidden  rounded-4xl h-full shadow-xl border-slate-700 border  ">
+        <div className="absolute w-full h-4/6" >
+          <FallBackImage
+            quality={100}
+            background={true}
+            objectFit="cover"
+            objectPosition="top"
+            src={props.beatmapCoverCard}
+            alt={
+              "backgroundcover for " +
+              props.beatmapMetaData.author +
+              " " +
+              props.beatmapMetaData.creator +
+              " " +
+              props.beatmapMetaData.title +
+              " " +
+              props.beatmapMetaData.version
+            }
+          />
+        </div>
+        <BeatmapBannerWrapper
+          isOnScore={isOnScore}
+          DifficultyAttributesOverlay={props.DifficultyAttributesOverlay}
+          infoNodges={props.infoNodges}
+          reached_rank={props.reached_rank}
+          beatmapMetaData={props.beatmapMetaData}
+          scoreBeatmapFooterData={props.scoreBeatmapFooterData}
+          score_id={props.score_id}
+          score_type={props.score_type}
+        />
+        <ColoredSuccedStatus
+          accuracy={props.scoreBeatmapBannerSuccedStatusData.accuracy}
+          perfect={props.scoreBeatmapBannerSuccedStatusData.perfect}
+          passed={props.scoreBeatmapBannerSuccedStatusData.passed}
+        />
+      </div>
+    </motion.div >
+  );
+
+
+};
+
+export default ScoreBeatmapBanner;

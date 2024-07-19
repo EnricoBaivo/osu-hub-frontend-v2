@@ -1,0 +1,256 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model acc_prediction {
+  id                 BigInt           @id @default(autoincrement())
+  last_update        DateTime?        @default(dbgenerated("NOW()")) @db.DateTime
+  acc                Float?
+  pp                 Float?
+  pp_difficulty      Float?
+  pp_acc             Float?
+  pp_aim             Float?
+  pp_speed           Float?
+  pp_flashlight      Float?
+  beatmap_md5        String?          @db.VarChar(555)
+  beatmap_id         BigInt?
+  beatmapset_id      BigInt?
+  mods_prediction_id BigInt?
+  beatmap            beatmap?         @relation(fields: [beatmap_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__acc_predi__beatm__2E3BD7D3")
+  beatmapset         beatmapset?      @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__acc_predi__beatm__2F2FFC0C")
+  mods_prediction    mods_prediction? @relation(fields: [mods_prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__acc_predi__mods___30242045")
+
+  @@index([acc], map: "ix_acc_prediction_acc")
+  @@index([beatmap_id], map: "ix_acc_prediction_beatmap_id")
+  @@index([beatmapset_id], map: "ix_acc_prediction_beatmapset_id")
+  @@index([mods_prediction_id], map: "ix_acc_prediction_mods_prediction_id")
+}
+
+model animie_reference {
+  id            Int         @id() @unique() @default(autoincrement())
+  name          String?     @db.VarChar(555)
+  ani_list_url  String?     @db.VarChar(555)
+  beatmapset_id BigInt?
+  beatmapset    beatmapset? @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__animie_re__beatm__45544755")
+
+  @@index([beatmapset_id], map: "ix_animie_reference_beatmapset_id")
+}
+
+model beatmap {
+  id              BigInt            @id() @default(autoincrement())
+  title           String?           @db.VarChar(555)
+  version         String?           @db.VarChar(555)
+  acc_prediction  acc_prediction[]
+  mods_prediction mods_prediction[]
+  prediction      prediction[]
+  userscore       userscore[]
+}
+
+model beatmapset {
+  id               BigInt             @id() @default(autoincrement())
+  duration         Int?
+  status           String?            @db.VarChar(555)
+  downloaded       Boolean?
+  downloadable     Boolean?
+  acc_prediction   acc_prediction[]
+  animie_reference animie_reference[]
+  mods_prediction  mods_prediction[]
+  prediction       prediction[]
+  userscore        userscore[]
+}
+
+model mods_prediction {
+  id                   BigInt           @id() @default(autoincrement())
+  mods                 Int?
+  mode                 Int?
+  stars                Float?
+  ar                   Float?
+  od                   Float?
+  cs                   Float?
+  bpm                  Float?
+  hp                   Float?
+  aim                  Float?
+  speed                Float?
+  flashlight           Float?
+  slider_factor        Float?
+  speed_note_count     Float?
+  hit_window           Float?
+  effective_miss_count Float?
+  stamina              Float?
+  color                Float?
+  rhythm               Float?
+  peak                 Float?
+  prediction_id        BigInt?
+  beatmap_id           BigInt?
+  beatmapset_id        BigInt?
+  acc_prediction       acc_prediction[]
+  beatmap              beatmap?         @relation(fields: [beatmap_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__mods_pred__beatm__297722B6")
+  beatmapset           beatmapset?      @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__mods_pred__beatm__2A6B46EF")
+  prediction           prediction?      @relation(fields: [prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__mods_pred__predi__2882FE7D")
+
+  @@index([aim], map: "ix_mods_prediction_aim")
+  @@index([ar], map: "ix_mods_prediction_ar")
+  @@index([beatmap_id], map: "ix_mods_prediction_beatmap_id")
+  @@index([beatmapset_id], map: "ix_mods_prediction_beatmapset_id")
+  @@index([bpm], map: "ix_mods_prediction_bpm")
+  @@index([cs], map: "ix_mods_prediction_cs")
+  @@index([flashlight], map: "ix_mods_prediction_flashlight")
+  @@index([hp], map: "ix_mods_prediction_hp")
+  @@index([od], map: "ix_mods_prediction_od")
+  @@index([prediction_id], map: "ix_mods_prediction_prediction_id")
+  @@index([speed], map: "ix_mods_prediction_speed")
+  @@index([stars], map: "ix_mods_prediction_stars")
+}
+
+model prediction {
+  id              BigInt            @id() @default(autoincrement())
+  max_combo       Int?
+  duration        Int?
+  beatmap_id      BigInt?
+  beatmapset_id   BigInt?
+  mode            Int?
+  last_update     DateTime?         @default(dbgenerated("NOW()")) @db.DateTime
+  mods_prediction mods_prediction[]
+  beatmap         beatmap?          @relation(fields: [beatmap_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__predictio__beatm__24B26D99")
+  beatmapset      beatmapset?       @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__predictio__beatm__25A691D2")
+
+  @@index([beatmap_id], map: "ix_prediction_beatmap_id")
+  @@index([beatmapset_id], map: "ix_prediction_beatmapset_id")
+  @@index([duration], map: "ix_prediction_duration")
+  @@index([max_combo], map: "ix_prediction_555_combo")
+}
+
+model score_statistic {
+  id         Int         @id() @default(autoincrement())
+  count_50   Int?
+  count_100  Int?
+  count_300  Int?
+  count_miss Int?
+  count_geki Int?
+  count_katu Int?
+  userscore  userscore[]
+}
+
+model score_weight {
+  id         BigInt      @id() @default(autoincrement())
+  percentage Float?
+  pp         Float?
+  userscore  userscore[]
+}
+
+model Session {
+  id           String    @id @default(cuid())
+  sessionToken String    @unique
+  userId       String
+  expires      DateTime
+  user         user      @relation(fields: [userId], references: [id])
+  createdAt    DateTime? @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt    DateTime? @updatedAt
+
+  @@index([userId])
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String  @unique
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     user?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model user {
+  id            String          @id @default(cuid())
+  name          String?
+  username      String?         @unique
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  Session       Session[]
+  Account       Account?
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+
+  createdAt       DateTime @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt       DateTime @updatedAt
+  lastLogin       DateTime @default(dbgenerated("NOW()")) @db.DateTime
+  is_new          Boolean? @default(true)
+  is_online       Boolean? @default(false)
+  is_admin        Boolean? @default(false)
+  is_alpha_tester Boolean? @default(false)
+  is_beta_tester  Boolean? @default(false)
+  osu_user_id     BigInt?
+
+  @@map("user")
+}
+
+model userscore {
+  id                  BigInt           @id() @default(autoincrement())
+  accuracy            Float?
+  score               Int?
+  max_combo           Int?
+  passed              Boolean?
+  perfect             Boolean?
+  rank                String?          @db.VarChar(555)
+  created_at          DateTime?        @db.DateTime
+  mods                Int?
+  replay              Boolean?
+  score_url           String?          @db.VarChar(555)
+  pp                  Float?
+  best_id             BigInt?
+  rank_global         Int?
+  rank_country        Int?
+  type                String?          @db.VarChar(555)
+  osu_user_id         BigInt?
+  beatmap_id          BigInt?
+  beatmapset_id       BigInt?
+  mode_id             Int?
+  score_weight_id     BigInt?
+  score_statistics_id Int?
+  beatmap             beatmap?         @relation(fields: [beatmap_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__userscore__beatm__4830B400")
+  beatmapset          beatmapset?      @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__userscore__beatm__4924D839")
+  score_weight        score_weight?    @relation(fields: [score_weight_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__userscore__score__4A18FC72")
+  score_statistic     score_statistic? @relation(fields: [score_statistics_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__userscore__score__4B0D20AB")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,24 @@
+
+.SliderTrack {
+  position: relative;
+  flex-grow: 1;
+  border-radius: 9999px;
+  height: 3px;
+}
+
+.SliderRange {
+  position: absolute;
+  border-radius: 9999px;
+  height: 100%;
+}
+
+.SliderThumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+.SliderThumb:focus {
+  outline: none;
+}
