@@ -64,7 +64,7 @@ const BeatmapScoreBanners = async ({
 
 
 
-  return (<>
+  return (<div className="flex flex-col min-h-[800px] w-full">
     <div className="flex text-2xl max-w-5xl flex-col w-full text-white">
       <div className="pb-8 flex flex-row justify-between items-end">
         <Headline headlineNumber={1} >Latest Scores </Headline>
@@ -80,7 +80,7 @@ const BeatmapScoreBanners = async ({
         userScoresIdsData.map((score_id) => (
           <Suspense
             key={Number(score_id)}
-            fallback={<SkeltonCardBeatmapsetBanner isLoading={true} />}
+            fallback={<SkeltonCardBeatmapsetBanner width={300} height={140} isLoading={true} />}
           >
             <BeatmapScoreBanner
               score_id={Number(score_id)}
@@ -89,12 +89,11 @@ const BeatmapScoreBanners = async ({
         ))
       }
     </div >
-    <div className="py-10 px-12 border border-slate-500 bg-osuhub-gray my-12 rounded-xl">
-    <UserDataLoaded length={userScoresIdsData.length} is_new={is_new} />
-
+    <div className="flex py-10 px-12 border border-slate-500 bg-osuhub-gray my-12 rounded-xl items-center">
+      <UserDataLoaded length={userScoresIdsData.length} is_new={is_new} />
       {userScoresIdsData.length > 1 && <PaginationLink total={pages} cursor={page} />}
     </div>
-  </>
+  </div>
   );
 };
 

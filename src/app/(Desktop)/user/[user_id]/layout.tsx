@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   const osu_user_id: number = getUserIdFromParams(session, params);
 
   return (
-      <main className="flex overflow-y-auto relative min-h-screen h-full w-full flex-col items-center bg-gradient-to-b from-osuhub-dark-ice-grey to-osuhub-dark-ice-blue text-white">
+      <main className="flex overflow-y-auto relative min-h-screen w-full flex-col items-center bg-gradient-to-b from-osuhub-dark-ice-grey to-osuhub-dark-ice-blue text-white">
         <Suspense fallback={<div className="h-screen" >Loading...</div>}>
           <OsuProfileHeader osu_user_id={osu_user_id} />
         </Suspense>

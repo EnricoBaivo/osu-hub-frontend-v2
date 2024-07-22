@@ -13,6 +13,7 @@ const config = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  
   images: {
     remotePatterns: [
       {
@@ -29,9 +30,19 @@ const config = {
         protocol: "https",
         hostname: "assets.ppy.sh",
         pathname: "/**",
+      },{
+        protocol: "https",
+        hostname: "assets.ppy.sh",
+        pathname: "/**",
       },
     ],
-    domains: ["a.ppy.sh", "osu.ppy.sh", "b.ppy.sh", "assets.ppy.sh"],
+    domains: [
+      "a.ppy.sh",
+      "osu.ppy.sh",
+      "b.ppy.sh",
+      "assets.ppy.sh",
+      "osekai.net"
+    ],
   },
   output: "standalone",
 };

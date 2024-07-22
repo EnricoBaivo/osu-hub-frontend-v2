@@ -14,6 +14,7 @@ import TextHeadline from "../../UI/TextHeadline";
 import Progressbar from "../../UI/Progressbar/Progressbar";
 import UserPageHtml from "../../UI/UserPageHtml";
 import { api } from "@/trpc/server";
+import UserMedals from "./UserMedal";
 
 
 const PlayTime = ({
@@ -177,6 +178,9 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
 
         {user_page && <UserPageHtml html={user_page.html || user_page.raw} />}
       </div>
+
+
+      <UserMedals userAchievments={user?.user_achievements} onlyReached/>
     </div>
   );
 };

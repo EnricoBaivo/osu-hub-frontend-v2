@@ -103,7 +103,7 @@ const Users = () => {
         if (!ref.current) return;
         const newFormData = new FormData(ref.current);
         const userIds = newFormData.getAll("c1") as string[];
-        userIds.map(id => updateUser(id, true));
+        userIds.map(id => updateUser(id));
         mutation.mutate({ userIds });
     }
 

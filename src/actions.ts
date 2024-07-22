@@ -1,15 +1,19 @@
 "use server";
 
+import { MedalInterface } from "./hooks/useFetchMedals";
+import { auth } from "./server/auth";
+
 export async function updateUser(
   osu_user_id?: string | number | undefined | null,
-  called_by_admin?: boolean,
 ): Promise<boolean> {
+  const session = await auth();
+  if (!session) return false;
+
   if (!osu_user_id) return false;
   const url = `http://45.131.111.217:8000/v1/update?user_id=${osu_user_id}&called_by_admin=${
-    called_by_admin ? "sheeesh" : "dough"
+    session.user.is_admin ? "sheeesh" : "dough"
   }`;
-  console.log(url);
-  
+
   const response = await fetch(url, {
     method: "GET",
     mode: "cors",
@@ -27,4 +31,29 @@ export async function updateUser(
     return false;
   }
   return true;
+}
+
+export async function getMedals() {
+  const myHeaders = new Headers();
+  myHeaders.append("Cookie", "locale=en_GB");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    next: { revalidate: 3600 * 48 },
+  };
+  try {
+    const res = await fetch(
+      "https://osekai.net/medals/api/medals.php",
+      requestOptions,
+    );
+    if (!res.ok) {
+      return [];
+    }
+    const medals: MedalInterface[] = await res.json();
+    return medals;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 }

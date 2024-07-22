@@ -1,86 +1,83 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface ToolTipProps {
-    title: string;
+
     margin?: number;
-    description?: string;
     children: React.ReactNode;
+    DisplayElement: React.ReactNode;
 }
 
-const ToolTip: React.FC<ToolTipProps> = ({ title, margin = 10, description, children }) => {
-    const [above, setAbove] = useState(1);
+const ToolTip: React.FC<ToolTipProps> = ({ DisplayElement, margin = 10, children }) => {
+    const [above, setAbove] = useState(true);
     const [isHovering, setIsHovering] = useState(false);
     const [shouldAnimate, setShouldAnimate] = useState(false);
-    const [moveTo, setMoveTo] = useState(0);
+    const [moveTo, setMoveTo] = useState({ x: 0, y: 0 });
     const toolTipRef = useRef<HTMLDivElement | null>(null);
     const hoverRef = useRef<HTMLDivElement | null>(null);
+    const { width } = useDimensions();
     useEffect(() => {
         let hoverTimeout: NodeJS.Timeout | null = null;
         if (isHovering) {
             hoverTimeout = setTimeout(() => {
                 setShouldAnimate(true);
-            }, 1000); // 2000 milliseconds = 2 seconds
+            }, 1000);
         } else {
-            if (hoverTimeout)
-                clearTimeout(hoverTimeout);
+            if (hoverTimeout) clearTimeout(hoverTimeout);
             setShouldAnimate(false);
         }
-
-
         return () => {
-            if (hoverTimeout)
-                clearTimeout(hoverTimeout);
-
+            if (hoverTimeout) clearTimeout(hoverTimeout);
         };
     }, [isHovering]);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (!hoverRef.current || !toolTipRef.current)
-                return;
-            const hoverElementBounding = hoverRef.current.getBoundingClientRect()
-            const toolTipRefBounding = toolTipRef.current.getBoundingClientRect()
-            const distanceFromTop = hoverElementBounding.top;
-            if (distanceFromTop > hoverElementBounding.height + margin) {
-                setAbove(-1);
-            }
-            setMoveTo((above * toolTipRefBounding.height) + (above * margin));
-        };
-        // Add a window resize event listener
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
+
+        if (!hoverRef.current || !toolTipRef.current) return;
+
+        const hoverElementBounding = hoverRef.current.getBoundingClientRect();
+        const toolTipRefBounding = toolTipRef.current.getBoundingClientRect();
+        const distanceFromTop = hoverElementBounding.top;
+        const distanceFromLeft = hoverElementBounding.left;
+        const widthOfToolTipElement = toolTipRefBounding.width;
+        const widthOfHoverElement = hoverElementBounding.width;
+
+        if (distanceFromTop > hoverElementBounding.height + margin) {
+            setAbove(false);
+        } else {
+            setAbove(true);
         }
+        const offsetY = above ? (hoverElementBounding.height + margin) : -toolTipRefBounding.height - 5 - margin;
 
-    }, [hoverRef, shouldAnimate, margin, above]);
+        const offsetX = ((widthOfHoverElement / 2 - widthOfToolTipElement / 2));
+        const move = { x: offsetX, y: offsetY };
+        setMoveTo({ ...move });
 
+    }, [width, margin, above, isHovering]);
 
-    return (
-        <>
+    return (<>
+        <div
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            ref={hoverRef}
+            className='relative'
+        >
+            {DisplayElement}
             <AnimatePresence>
                 {isHovering && (
                     <motion.div
                         ref={toolTipRef}
                         initial={{
                             position: "absolute",
-                            transformOrigin: "top",
-                            x: 0,
-                            y: 0,
+                            transformOrigin: "center",
                             opacity: 0,
 
                         }}
-                        animate={shouldAnimate ? {
-                            opacity: 1, y: moveTo,
-
-
-                        } : {}}
-
-                        exit={{
-                            opacity: 0,
-
-                        }}
+                        animate={shouldAnimate ? { opacity: 1 } : {}}
+                        style={{ transform: `translate(${(moveTo.x)}px, ${moveTo.y}px)` }}
+                        exit={{ opacity: 0 }}
                         transition={{
                             type: "spring",
                             damping: 10,
@@ -89,27 +86,27 @@ const ToolTip: React.FC<ToolTipProps> = ({ title, margin = 10, description, chil
                             bounce: 0.5,
                             duration: 0.5,
                         }}
-                        className=" bg-white border border-gray-300 p-4"
+                        className="bg-osuhub-dark-ice-blue border backdrop-blur-3xl border-gray-300 p-4 w-56 top-0 left-0 rounded-xl z-50"
                     >
 
-                        <div className="font-exo text-md font-bold ">{title}</div>
-                        {description && <p>{description} {moveTo}</p>}
-                        <div className={
-                            clsx("absolute w-3 h-3 bg-white transform rotate-45  left-1/2 translate-x-[-50%]",
-                                { "bottom-[-5px]": above < 0 },
-                                { "top-[-5px]": above > 0 })}></div>
+                        {children}
 
+                        <div
+                            className={clsx(
+                                "absolute w-3 h-3 bg-white transform rotate-45 left-1/2 translate-x-[-50%]",
+                                {
+                                    "bottom-[-5px]": !above,
+                                    "top-[-5px]": above,
+                                }
+                            )}
+                        ></div>
                     </motion.div>
                 )}
             </AnimatePresence>
-            <div
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                ref={hoverRef}
-            >
-                {children}
-            </div>
-        </>
+
+        </div>
+
+    </>
     );
 };
 
