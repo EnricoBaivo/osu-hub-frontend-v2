@@ -64,7 +64,7 @@ const BeatmapScoreBanners = async ({
 
 
 
-  return (<div className="flex flex-col min-h-[800px] w-full">
+  return (<div className="flex flex-col w-full items-center justify-center">
     <div className="flex text-2xl max-w-5xl flex-col w-full text-white">
       <div className="pb-8 flex flex-row justify-between items-end">
         <Headline headlineNumber={1} >Latest Scores </Headline>
@@ -74,7 +74,7 @@ const BeatmapScoreBanners = async ({
       <StatsBubble title="Todays Highest Score:" data={highestScore ? highestScore.score : "Lets seee what you will reach today"} />
       <QuerySearchParamsUpdate />
     </div>
-    <div className="flex font-exo w-full flex-wrap items-center justify-center gap-8 sm:w-11/12 ">
+    <div className="flex font-exo w-full flex-wrap  min-h-[800px] items-center justify-center gap-8 sm:w-11/12 ">
 
       {
         userScoresIdsData.map((score_id) => (
