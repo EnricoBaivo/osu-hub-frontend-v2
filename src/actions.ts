@@ -5,13 +5,14 @@ import { auth } from "./server/auth";
 
 export async function updateUser(
   osu_user_id?: string | number | undefined | null,
+  is_admin = false,
 ): Promise<boolean> {
   const session = await auth();
   if (!session) return false;
 
   if (!osu_user_id) return false;
-  const url = `http://45.131.111.217:8000/v1/update?user_id=${osu_user_id}&called_by_admin=${
-    session.user.is_admin ? "sheeesh" : "dough"
+  const url = `http://45.131.111.217:8000/v1/update/?user_id=${osu_user_id}&called_by_admin=${
+    is_admin ? "sheeesh" : "dough"
   }`;
 
   const response = await fetch(url, {
