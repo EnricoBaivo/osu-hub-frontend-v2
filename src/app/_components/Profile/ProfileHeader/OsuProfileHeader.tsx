@@ -15,6 +15,7 @@ import Progressbar from "../../UI/Progressbar/Progressbar";
 import UserPageHtml from "../../UI/UserPageHtml";
 import { api } from "@/trpc/server";
 import UserMedals from "./UserMedal";
+import Link from "next/link";
 
 
 const PlayTime = ({
@@ -78,7 +79,7 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
           fill
         />
 
-        <div
+        <Link href={`https://osu.ppy.sh/users/${user?.id}`}
           className={clsx(
             "border border-slate-700 flex items-center justify-center rounded-full w-34 h-34 drop-shadow-xl absolute left-16 p-1 overflow-hidden",
             {
@@ -99,7 +100,7 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
             width={112}
             height={112}
           />
-        </div>
+        </Link>
       </div>
       <div className="min:h-screen flex flex-col w-4/6 items-center gap-5 md:w-11/12 xl:w-4/6 xl:min-w-[1000px]">
         <div className="flex w-full justify-between">
@@ -180,7 +181,7 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
       </div>
 
 
-      <UserMedals userAchievments={user?.user_achievements} onlyReached/>
+      <UserMedals userAchievments={user?.user_achievements} onlyReached />
     </div>
   );
 };

@@ -3,10 +3,11 @@
 import TableWithSelect from "@/app/_components/UI/Table/TableWithSelect"
 import { api } from "@/trpc/react";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Headline } from "@/app/_components/UI/Typography/Headline";
 import ButtonNodge from "@/app/_components/UI/Button/ButtonNodge";
 import { updateUser } from "@/actions";
+import Link from "next/link";
 
 export interface SortOptions {
     // isNew?: boolean;
@@ -24,7 +25,7 @@ export interface SortOptions {
     isAlphaTester: "none" | "ascending" | "descending" | "other" | undefined
 }
 
-const Users = () => {
+const Users = ({ totalUsers }: { totalUsers: number }) => {
     const [sortOptions, setSortOptions] = useState<SortOptions>({
         lastLogin: "none",
         createdAt: "none",
@@ -37,13 +38,26 @@ const Users = () => {
         isAlphaTester: "none",
     });
 
-    const [showOnlyNewUsers, setShowOnlyNewUsers] = useState(true);
-    const users = api.user.getNewUsers.useQuery();
-    const [usersdata, setUsersData] = useState<typeof users.data>();
-
+    const [showOnlyNewUsers, setShowOnlyNewUsers] = useState(false);
+    const { fetchNextPage,
+        fetchPreviousPage,
+        hasNextPage,
+        hasPreviousPage,
+        isFetchingNextPage,
+        isFetchingPreviousPage,
+        ...result
+    } = api.user.getNewUsers.useInfiniteQuery({}, {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        refetchOnWindowFocus: true,
+        initialCursor: undefined, // <-- optional you can pass an initialCursor
+    });
+    
     const sortedData = useMemo(() => {
-        if (!users.data) return null;
-        const dataToSort = [...users.data];
+        if (!result.data) return null;
+
+        const dataToSort = [...result.data.pages.flat().map((user) => { return user.res }).flat() ?? []];
+        console.log(dataToSort.length);
+
         dataToSort.sort((a, b) => {
             if (!b.osu_user_id || !a.osu_user_id) return 0;
 
@@ -66,16 +80,12 @@ const Users = () => {
 
             return 0; // If all comparisons are equal or values are null, return 0 to maintain the original order
         });
+
         if (showOnlyNewUsers)
             return dataToSort.filter((user) => user.is_new === true);
         return dataToSort;
-    }, [users, sortOptions, showOnlyNewUsers]);
+    }, [result.data, sortOptions, showOnlyNewUsers]);
 
-    useEffect(() => {
-        if (users.data && !usersdata) {
-            setUsersData(users.data);
-        }
-    }, [users, usersdata])
 
 
 
@@ -107,11 +117,11 @@ const Users = () => {
         mutation.mutate({ userIds });
     }
 
-    return sortedData ? <>
+    return <>
         <div className="flex flex-col w-full">
             <Headline headlineNumber={2}  >New Users</Headline>
             <p className="text-lg text-gray-500">Users who have not yet been assigned a role</p>
-            <p className="text-xl text-gray-200"> Users: {sortedData.length}</p>
+            <p className="text-xl text-gray-200"> Users: {totalUsers}</p>
             <div>
                 <ButtonNodge type="button" onClick={() => {
                     setSortOptions({
@@ -141,7 +151,7 @@ const Users = () => {
                 </ButtonNodge>
             </div>
         </div>
-        <TableWithSelect
+        {!result.isLoading && sortedData ? <TableWithSelect
             ref={ref}
             handleSubmit={handleSubmit}
 
@@ -166,7 +176,7 @@ const Users = () => {
                     userId: String(user.osu_user_id),
                     td: [
                         <div key={"rowId-" + i} className="flex w-full h-full items-center justify-center">{i + 1}</div>,
-                        <Image unoptimized width={60} height={60} key={"img" + user.id} className=" rounded-full" src={user.image ?? "https://osu.ppy.sh/images/flags/XX.png"} alt="" />,
+                        <Link href={`user/${user.osu_user_id}`}><Image unoptimized width={60} height={60} key={"img" + user.id} className=" rounded-full" src={user.image ?? "https://osu.ppy.sh/images/flags/XX.png"} alt="" /></Link>,
                         user.name ?? "??",
                         user.osu_user_id?.toString() ?? "??",
                         user.is_new ? <strong>Yes</strong> : "No",
@@ -179,8 +189,16 @@ const Users = () => {
                     ]
                 }
             })}
+            fetchNextPage={fetchNextPage}
         />
-    </> : <div>loading</div>
+
+
+            : <div>loading</div>}
+        <div className="py-4 px-6 flex flex-col w-80">
+            <h3 className="text-white">Page: {result.isFetching ? "Loading ....." : result.data?.pages.length}</h3>
+        </div>
+
+    </>
 
 
 }

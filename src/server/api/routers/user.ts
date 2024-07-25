@@ -128,30 +128,53 @@ export const userRouter = createTRPCRouter({
       return "user";
     }
   }),
-  getNewUsers: protectedProcedure.query(async ({ ctx }) => {
-    const fetchUser = await ctx.db.user.findFirst({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        is_admin: true,
-        is_new: true,
-      },
-    });
-    if (fetchUser?.is_admin) {
-      return await ctx.db.user.findMany({
-        // eq(users.isNew, true),
-        // eq(users.isAlphaTester, false),
-        // eq(users.isBetaTester, false),
-        orderBy: {
-          createdAt: "desc",
+  getNewUsers: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const fetchUser = await ctx.db.user.findFirst({
+        where: {
+          id: ctx.session.user.id,
         },
-        take: 100,
+        select: {
+          is_admin: true,
+          is_new: true,
+        },
       });
-    } else {
-      return [];
-    }
-  }),
+      if (fetchUser?.is_admin) {
+        const limit = 15;
+        const cursor = input.cursor;
+        const res = await ctx.db.user.findMany({
+          orderBy: {
+            id: "asc",
+          },
+
+          where: {
+            id: { gte: cursor ?? "" },
+          },
+
+          take: limit + 1,
+          cursor: cursor ? { id: cursor } : undefined,
+        });
+        let nextCursor: typeof cursor | undefined = undefined;
+        if (res.length > limit) {
+          const nextItem = res.pop();
+          nextCursor = nextItem!.id;
+        }
+        return {
+          res,
+          nextCursor,
+        };
+      }else{
+        return {
+          res : [],
+          nextCursor : null,
+        };
+      }
+    }),
   grandAlphaTester: protectedProcedure
     .input(z.object({ userIds: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
@@ -220,7 +243,9 @@ export const userRouter = createTRPCRouter({
       return "Registered, you are, and your interest, we applaud, young one. The path to becoming an early tester, it shall reveal itself in due time. Await the right moment, you must. If eager, send a message to me, you should, to express your desire for the realm of huge PP and early access.";
     }
   }),
-
+  getTotalUsers: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.user.count();
+  }),
   updateOnlineStatus: protectedProcedure
     .input(z.object({ online: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
