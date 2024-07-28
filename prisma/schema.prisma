@@ -32,13 +32,11 @@ model acc_prediction {
 }
 
 model animie_reference {
-  id            Int         @id() @unique() @default(autoincrement())
-  name          String?     @db.VarChar(555)
-  ani_list_url  String?     @db.VarChar(555)
-  beatmapset_id BigInt?
-  beatmapset    beatmapset? @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__animie_re__beatm__45544755")
-
-  @@index([beatmapset_id], map: "ix_animie_reference_beatmapset_id")
+  id           Int          @id() @unique() @default(autoincrement())
+  name         String?      @db.VarChar(555)
+  ani_list_url String?      @db.VarChar(555)
+  anilist_id   Int?
+  beatmapset   beatmapset[]
 }
 
 model beatmap {
@@ -52,16 +50,29 @@ model beatmap {
 }
 
 model beatmapset {
-  id               BigInt             @id() @default(autoincrement())
-  duration         Int?
-  status           String?            @db.VarChar(555)
-  downloaded       Boolean?
-  downloadable     Boolean?
-  acc_prediction   acc_prediction[]
-  animie_reference animie_reference[]
-  mods_prediction  mods_prediction[]
-  prediction       prediction[]
-  userscore        userscore[]
+  id             BigInt   @id() @default(autoincrement())
+  duration       Int?
+  status         String?  @db.VarChar(555)
+  downloaded     Boolean?
+  downloadable   Boolean?
+  artist         String?  @db.VarChar(555)
+  artist_unicode String?  @db.VarChar(555)
+  title          String?  @db.VarChar(555)
+  title_unicode  String?  @db.VarChar(555)
+  creator        String?  @db.VarChar(555)
+  source         String?  @db.VarChar(555)
+  pack_tags      Json?
+  genre_name     String?  @db.VarChar(555)
+
+  anilist_checked  Boolean?
+  description      Json?
+  animie_reference animie_reference? @relation(fields: [anilist_id], references: [id]) // Many-to-one relation
+  anilist_id       Int? // Optional integer for relation
+
+  acc_prediction  acc_prediction[]
+  mods_prediction mods_prediction[]
+  prediction      prediction[]
+  userscore       userscore[]
 }
 
 model mods_prediction {

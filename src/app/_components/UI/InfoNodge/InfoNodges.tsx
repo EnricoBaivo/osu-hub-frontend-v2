@@ -20,7 +20,7 @@ const InfoNodges = ({ children, isInView }: InfoNodgesProps) => {
         opacity: 0,
         y: -100
       }}
-        className={"flex pl-8 flex-row flex-wrap gap-5 rounded-4xl py-5"} >
+        className={"flex pl-6 flex-row flex-wrap gap-4 rounded-4xl py-4"} >
         {
           children
         }

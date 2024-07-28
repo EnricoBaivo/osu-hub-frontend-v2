@@ -14,7 +14,6 @@ interface BeatmapBannerBodyProps {
 const BeatmapBannerBody = (props: BeatmapBannerBodyProps) => {
 
     return <div
-
         className="relative flex flex-row h-full w-full justify-between ">
         <div className="flex flex-col  ">
             <ScoreBannerHeaderWithPlay

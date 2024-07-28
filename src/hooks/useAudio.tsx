@@ -5,7 +5,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import VolumeControl from '@/app/_components/UI/AudioPlayer/VolumeControl';
 import { type Covers } from 'osu-web.js';
-import { useDimensions } from './useDimensions';
+import AniListNote from '@/app/_components/UI/AniList/AniListNote';
 export type beatmapMetaDataType = {
     title: string;
     covers: Covers;
@@ -18,6 +18,7 @@ export type beatmapMetaDataType = {
     beatmap_id: number;
     preview_url: string;
     url: string;
+    hasAniList: boolean;
 }
 interface AudioStateContextProps {
     meta: beatmapMetaDataType | null;
@@ -108,10 +109,6 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
         }
     }, [src, currentlyPlaying]);
 
-    React.useEffect(() => {
-        console.log(meta)
-    }, [meta])
-
     useMotionValueEvent(volume, "change", (prevValue) => {
         if (ref.current) {
             const audio = ref.current
@@ -143,7 +140,7 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
 
                     }
                 }
-                className='fixed z-50 bottom-0 right-10 w-[375px] h-[175px] border border-slate-500  backdrop-blur-xl text-white rounded-lg overflow-hidden flex flex-col justify-end'
+                className='fixed z-50 bg-osuhub-dark-ice-grey bottom-0 right-10 w-[375px] h-[175px] border border-slate-500  backdrop-blur-xl text-white rounded-lg overflow-hidden flex flex-col justify-between'
             >
                 <Image
                     quality={100}
@@ -160,13 +157,18 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
                         " " +
                         meta?.title
                     }
-                    className='z-10 opacity-95'
+                    className='z-10 opacity-70'
                 />
-                <div className='px-4 py-2 w-full flex grow font-bold text-osuhub-yellow text-lg z-50'>
+                <div className='flex items-center gap-2 font-exo text-base font-black uppercase z-50 w-full'>
                     {meta?.covers &&
-                        <a href={meta?.url ?? ""} target='_blank'>
-                            <p>{meta?.title}</p>
-                            <p className='text-white'>by {meta?.artist}</p>
+                        <a className="pl-2 w-full" href={meta?.url ?? ""} target='_blank'>
+                            <p className=' text-osuhub-yellow flex items-center gap-2'>
+                                {meta?.title}
+                                <AniListNote beatmapset_id={meta?.beatmapset_id} hasAniList={meta?.hasAniList} />
+
+                            </p>
+                            <p >by {meta?.artist}</p>
+
                         </a>
                     }
 

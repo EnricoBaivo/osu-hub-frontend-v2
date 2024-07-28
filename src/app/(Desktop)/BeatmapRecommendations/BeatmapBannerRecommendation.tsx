@@ -9,6 +9,7 @@ import InfoNodge from '../../_components/UI/InfoNodge/InfoNodge';
 import Link from 'next/link';
 import { RiDownload2Line, RiVideoDownloadLine } from 'react-icons/ri';
 import JumpToOsuDirect from '../../_components/UI/Button/JumpToOsuDirect';
+import { useEffect } from 'react';
 type RouterOutput = inferRouterOutputs<PredictionRouter>;
 type getByIdOutput = RouterOutput['recommendation'];
 type getByIdResult = getByIdOutput['res'];
@@ -21,6 +22,7 @@ const BeatmapBannerRecommendation = ({ beatmapRec }: { beatmapRec: getBeatmapByI
     const prediction = beatmapRec
     // const prediction = api.prediction.byId.useQuery({ predictionId: Number(beatmapRec.id) })
     const beatmap = api.beatmap.byId.useQuery({ beatmapId: Number(beatmapRec.beatmap_id) }, { refetchOnWindowFocus: false })
+    const hasAniList = api.beatmapset.hasAniList.useQuery({ beatmapset_id: Number(beatmapRec.beatmapset_id) })
 
     if (!beatmap.isSuccess) return <SkeletonCard />
 
@@ -28,8 +30,6 @@ const BeatmapBannerRecommendation = ({ beatmapRec }: { beatmapRec: getBeatmapByI
     const b_acc = beatmap_predictions?.acc_prediction.map((pre) => { return pre.acc?.toFixed(2).toString() ?? "??" })
     const b_pp = beatmap_predictions?.acc_prediction.map((pre) => { return pre.pp?.toFixed(2).toString() ?? "??" })
     const modsList = new Mods(beatmap_predictions?.mods ?? 0)
-
-
 
     return beatmap.isSuccess ? <BeatmapBanner key={(beatmap_predictions?.id ?? 0)}
         DifficultyAttributesOverlay={
@@ -81,6 +81,7 @@ const BeatmapBannerRecommendation = ({ beatmapRec }: { beatmapRec: getBeatmapByI
         beatmapCoverCard={beatmap.data?.beatmapset.covers?.['card@2x'] ?? "/defaultBeatmapBanner.png"}
         beatmapMetaData={
             {
+                hasAniList: hasAniList.data ? hasAniList.data : false,
                 author: beatmap.data?.beatmapset.creator ?? "missing",
                 creator: beatmap.data?.beatmapset.creator ?? "missing",
                 version: beatmap.data?.version ?? "missing",

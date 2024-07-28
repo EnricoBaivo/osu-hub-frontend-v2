@@ -1,4 +1,5 @@
 import { beatmapMetaDataType } from "@/hooks/useAudio";
+import AniListNote from "../../UI/AniList/AniListNote";
 
 const ScoreBannerHeader = (props: beatmapMetaDataType) => {
   return (
@@ -14,6 +15,8 @@ const ScoreBannerHeader = (props: beatmapMetaDataType) => {
           <div className="font-exo text-2xl font-black uppercase text-white">
             {props.title}
           </div>
+          <AniListNote hasAniList={props.hasAniList} beatmapset_id={props.beatmapset_id} />
+
         </div>
         <div className="font-exo flex text-center  text-xl text-white">
           [ {props.version} ]

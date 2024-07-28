@@ -30,7 +30,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative font-sans ${exo2.variable}${inter.variable}  flex h-screen w-screen flex-row bg-slate-800 -z-20 overflow-hidden `}      >
+        className={`relative font-sans ${exo2.variable}${inter.variable} flex h-screen w-screen flex-row bg-slate-800 -z-20 overflow-hidden `}      >
         <DefaultBackground />
         <TRPCReactProvider headers={headers()}>
           <BreakpointLayout breakpoint={1000} breakpointComponent={<IsNotDesktopComponent username={session?.user.name} />}>

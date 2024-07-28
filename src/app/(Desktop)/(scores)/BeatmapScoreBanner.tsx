@@ -1,7 +1,6 @@
 
 import React from "react";
 import { api } from "@/trpc/server";
-import ScoreBeatmapBanner from "@/app/_components/ScoreBeatmapBanner/ScoreBeatmapBanner";
 
 import { Mods, modsToStringList } from "@/lib/Mod";
 import InfoNodge from "@/app/_components/UI/InfoNodge/InfoNodge";
@@ -9,6 +8,7 @@ import InfoNodge from "@/app/_components/UI/InfoNodge/InfoNodge";
 import Link from "next/link";
 import { RiDownload2Line, RiVideoDownloadLine } from "react-icons/ri";
 import JumpToOsuDirect from "@/app/_components/UI/Button/JumpToOsuDirect";
+import ScoreBeatmapBanner from "@/app/_components/ScoreBeatmapBanner/ScoreBeatmapBanner";
 
 
 async function BeatmapScoreBanner({
@@ -25,6 +25,7 @@ async function BeatmapScoreBanner({
   if (!score?.beatmap_id) return <div>Score not found</div>;
   const beatmap = await api.beatmap.byId.query({ beatmapId: Number(score.beatmap_id) })
   const prediction = await api.prediction.byIdWithMods.query({ beatmapId: Number(score.beatmap_id), mods: score.mods ?? 0 });
+  const hasAniList = await api.beatmapset.hasAniList.query({ beatmapset_id: Number(score.beatmapset_id) })
 
   if (!beatmap) return <div>beatmap not found</div>;
   if (!score) return <div>Score not found</div>;
@@ -36,12 +37,13 @@ async function BeatmapScoreBanner({
   const b_acc = predictions?.map((pre) => { return pre.acc?.toFixed(2).toString() ?? "??" })
   const b_pp = predictions?.map((pre) => { return pre.pp?.toFixed(2).toString() ?? "??" })
 
-  
+
   return score && <ScoreBeatmapBanner
     score_type={score?.type ?? "osu"}
     score_id={Number(score?.id ?? 0)}
     beatmapMetaData={{
-      id: score?.beatmap_id?.toString() ?? "0",
+
+      hasAniList: hasAniList,
       beatmap_id: Number(score.beatmap_id ?? 0),
       beatmapset_id: Number(score.beatmapset_id ?? 0),
       artist: beatmap?.beatmapset?.artist ?? "missing",

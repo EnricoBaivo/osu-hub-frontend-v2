@@ -23,6 +23,7 @@ export type BeatmapRecommendationState = {
     beatmapsetMode: number;
     beatmapHasPredictions: boolean;
     sortForLatest: boolean;
+    sortForAnimie: boolean;
     duration: number[];
     mods: number;
 };
@@ -38,6 +39,7 @@ const UserBeatmapRecommendations = ({ userPrediction }: { userPrediction: UserPr
         beatmapsetMode: 0,
         beatmapHasPredictions: true,
         sortForLatest: false,
+        sortForAnimie: false,
         duration: [40, 80],
         mods: 0
     };
@@ -141,6 +143,12 @@ const UserBeatmapRecommendations = ({ userPrediction }: { userPrediction: UserPr
                     setBeatmapState(() => { return beatmapTempState.current })
                 }}>
                     {beatmapState.sortForLatest ? "Sort by id" : "Sort by newest"}
+                </ButtonNodge>
+                <ButtonNodge type="button" className="shrink" onClick={() => {
+                    updateTempBeatmapState("sortForAnimie", (prev) => !prev)
+                    setBeatmapState(() => { return beatmapTempState.current })
+                }}>
+                    {beatmapState.sortForAnimie ? "all beatmaps" : "animie beatmaps"}
                 </ButtonNodge>
             </div >
 

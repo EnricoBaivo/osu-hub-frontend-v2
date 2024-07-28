@@ -23,6 +23,11 @@ const config = {
       },
       {
         protocol: "https",
+        hostname: "s4.anilist.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "osu.ppy.sh",
         pathname: "/**",
       },

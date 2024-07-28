@@ -43,6 +43,7 @@ const BeatmapBannerRecommendations: React.FC<BeatmapBannerRecommendationsProps> 
         lower_bpm: BeatmapRecommendationState?.userPrecitions?.bpm[0.5] ?? undefined,
         upper_bpm: BeatmapRecommendationState?.userPrecitions?.bpm[0.99] ?? undefined,
         sort_for_latest: BeatmapRecommendationState.sortForLatest,
+        sort_for_animie: BeatmapRecommendationState.sortForAnimie,
         mods: BeatmapRecommendationState.mods,
         limit: 5
     }

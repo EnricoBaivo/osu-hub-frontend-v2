@@ -13,6 +13,7 @@ import { FallBackImage } from "../UI/OsuImage/FallbackImage";
 import BeatmapBannerBody from "./ScoreBannerBody";
 import { useState } from "react";
 import { beatmapMetaDataType } from "@/hooks/useAudio";
+import BeatmapBannerWrapper from "./BeatmapBannerWrapper";
 
 
 export interface ScoreBeatmapBannerProps {
@@ -28,38 +29,6 @@ export interface ScoreBeatmapBannerProps {
   beatmapset_video: boolean | null | undefined;
   preview_url: string | null | undefined;
   beatmapMetaData: beatmapMetaDataType
-}
-const BeatmapBannerWrapper = (props: {
-  DifficultyAttributesOverlay: DifficultyAttributesOverlayProps,
-  infoNodges: InfoNodgesProps, score_id: number, reached_rank: string,
-  score_type: string,
-  scoreBeatmapFooterData: ScoreBeatmapFooterProps,
-  beatmapMetaData: beatmapMetaDataType,
-  isOnScore: boolean
-
-}) => {
-
-  return <div
-    className="flex w-full h-full flex-col"
-  >
-    <BeatmapBannerBody
-      beatmapMetaData={props.beatmapMetaData}
-      isOnScore={props.isOnScore}
-      DifficultyAttributesOverlay={props.DifficultyAttributesOverlay}
-      infoNodges={props.infoNodges}
-      score_id={props.score_id}
-      reached_rank={props.reached_rank}
-    />
-    <ScoreBeatmapFooter
-      score_type={props.score_type}
-      score_id={props.score_id}
-      scoreHitData={props.scoreBeatmapFooterData.scoreHitData}
-      scoreData={props.scoreBeatmapFooterData.scoreData}
-      scorePredictionData={props.scoreBeatmapFooterData.scorePredictionData}
-      scoreModsData={props.scoreBeatmapFooterData.scoreModsData}
-      date={props.scoreBeatmapFooterData.date}
-    />
-  </div >
 }
 
 const ScoreBeatmapBanner = (props: ScoreBeatmapBannerProps) => {

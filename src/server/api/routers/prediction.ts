@@ -75,6 +75,7 @@ export const predictionRouter = createTRPCRouter({
         lower_bpm: z.optional(z.number()),
         upper_bpm: z.optional(z.number()),
         sort_for_latest: z.optional(z.boolean()),
+        sort_for_animie: z.optional(z.boolean()),
         mods: z.optional(z.number()),
         cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
       }),
@@ -92,6 +93,12 @@ export const predictionRouter = createTRPCRouter({
           mode: 0,
 
           beatmapset: {
+            genre_name: input.sort_for_animie
+              ? {
+                  startsWith: "Anime",
+                }
+              : undefined,
+
             duration: {
               gte: input.lower_duration ?? 0,
               lte: input.upper_duration ?? 1000,
