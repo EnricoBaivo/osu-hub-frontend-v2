@@ -30,7 +30,7 @@ const BeatmapScoreBanners = ({
 }) => {
   const fakeArray = [...Array(limit).keys()]; 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
+    <div className="flex flex-col w-full min-h-full items-center justify-center">
       <div className="flex text-2xl max-w-5xl flex-col w-full text-white">
         <div className="pb-8 flex flex-row justify-between items-end">
           <Headline headlineNumber={1} >Latest Scores </Headline>
