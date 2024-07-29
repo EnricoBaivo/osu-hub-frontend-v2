@@ -1,4 +1,5 @@
 import OsuProfileHeader from "@/app/_components/Profile/ProfileHeader/OsuProfileHeader";
+import OsuProfileHeaderSkeleton from "@/app/_components/Profile/ProfileHeader/OsuProfileHeaderSkeleton";
 import Footer from "@/app/_components/UI/Footer/Footer";
 import { env } from "@/env.mjs";
 import { auth } from "@/server/auth";
@@ -17,13 +18,12 @@ export default async function DashboardLayout({
 
   if (!session) {
     redirect(env.TO_LOGIN_PAGE);
-    return <div>Redirecting...</div>;
   }
   const osu_user_id: number = getUserIdFromParams(session, params);
 
   return (
       <main className="flex overflow-y-auto relative min-h-screen w-full flex-col items-center bg-gradient-to-b from-osuhub-dark-ice-grey to-osuhub-dark-ice-blue text-white">
-        <Suspense fallback={<div className="h-screen" >Loading...</div>}>
+        <Suspense fallback={<OsuProfileHeaderSkeleton />}>
           <OsuProfileHeader osu_user_id={osu_user_id} />
         </Suspense>
         {children}

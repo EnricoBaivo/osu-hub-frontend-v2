@@ -59,6 +59,7 @@ export const createTRPCContext = async (opts: { req: NextRequest }) => {
 
   return await createInnerTRPCContext({
     headers: opts.req.headers,
+    
   });
 };
 

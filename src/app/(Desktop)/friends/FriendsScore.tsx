@@ -24,6 +24,7 @@ type FriendsScoreProps = {
     myRank?: number;
 }
 export default async function FriendsScore({ myRank, friend, is_passed, scoretype = [score_types.score_osu, score_types.score_best_osu, "solo_score"], is_perfect, skip, limit }: FriendsScoreProps) {
+
     const userScoresIdsData = await api.score.getUserScoresIds.query({
         is_passed: is_passed ?? true,
         scoretype: scoretype,
@@ -35,11 +36,10 @@ export default async function FriendsScore({ myRank, friend, is_passed, scoretyp
     );
 
     return (
-        <div className={clsx('relative container h-[880px]  z-10  rounded-4xl  overflow-hidden', {
+        <div className={clsx('relative container h-[880px] z-10  rounded-4xl  overflow-hidden', {
             "h-auto": userScoresIdsData.length === 0
-
         })}>
-            <Image fill src={friend.cover.url} alt={friend.username + " cover image"} className='absolute -z-10' />
+            <Image unoptimized fill src={friend.cover.url} alt={friend.username + " cover image"} className='absolute -z-10' />
             <div className={clsx('h-full w-full flex flex-col z-30 bg-osuhub-dark-ice-blue backdrop-blur-lg')}>
                 <div className='py-6 px-12 flex flex-row items-center gap-8 text-white  backdrop-blur-3xl border-white/10  border-b'>
                     <Link href={`/user/${friend.id}`}

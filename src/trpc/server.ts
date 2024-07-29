@@ -23,6 +23,7 @@ export const api = createTRPCProxyClient<AppRouter>({
         heads.set("x-trpc-source", "rsc");
         return Object.fromEntries(heads);
       },
+      
     }),
   ],
 });

@@ -3,6 +3,8 @@ import { UserRole, linksData } from "@/static-data/linkData";
 import Sidebar from "@/app/_components/SidebarT/SidebarT";
 import { auth } from "@/server/auth";
 import AudioProvider from "@/hooks/useAudio";
+import { env } from "@/env.mjs";
+import { redirect } from "next/navigation";
 
 
 

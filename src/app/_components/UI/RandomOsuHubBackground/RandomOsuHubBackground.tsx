@@ -31,6 +31,7 @@ const RandomOsuHubBackground = () => {
         animate("img", { opacity: 0 }, { duration: 0.65 }).then(() => {
             setImage(randomBackground?.prev)
         }).then(() => {
+            if (!scope.current) return
             animate("img", { opacity: 1 }, { delay: 0.25, duration: 0.45 })
         })
 

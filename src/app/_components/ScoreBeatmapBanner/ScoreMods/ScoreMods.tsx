@@ -52,6 +52,7 @@ const ScoreMods = ({ mods, setActive }: ScoreModsProps) => {
           whileHover={{ scale: 1.2, opacity: 1 }}
           className="relative w-14  ">
           {mod && <Image
+            unoptimized
             alt={mod}
             src={"/mods/" + mod.toLowerCase() + "@2x.png"}
             width={48}

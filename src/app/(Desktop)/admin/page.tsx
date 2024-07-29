@@ -8,7 +8,8 @@ import { api } from "@/trpc/server";
 
 const AdminPage = async () => {
     const session = await auth();
-    if (!session || !session.user.is_admin) return redirect(env.TO_LOGIN_PAGE);
+    if (!session ) return redirect(env.TO_LOGIN_PAGE);
+    if (!session?.user.is_admin) return redirect("/");
     const toalUsers = await api.user.getTotalUsers.query();
     return (
         <div className="flex h-full flex-col w-full pl-12">

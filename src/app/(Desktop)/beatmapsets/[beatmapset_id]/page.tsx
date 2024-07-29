@@ -1,5 +1,4 @@
-import { api } from '@/trpc/server'
-import React from 'react'
+import React, { Suspense } from 'react'
 import AnimeDetail from './AnimieDetailComponent';
 import { auth } from '@/server/auth';
 import { redirect } from 'next/navigation';
@@ -14,17 +13,15 @@ export default async function page({
 }) {
     const session = await auth()
     if (!session) {
-        return  redirect(env.TO_LOGIN_PAGE);
+        return redirect(env.TO_LOGIN_PAGE);
     }
-    const aniListMedia = await api.beatmapset.getAniListMedia.query({
-        beatmapset_id: Number(params?.beatmapset_id)
-    })
-    if (!aniListMedia) {
-        return <div>Media not found</div>
-    }
-    return (
 
-        <AnimeDetail aniListMedia={aniListMedia} />
-    );
+    return <div className="overflow-y-auto w-full mt-12">
+        <div className="relative flex flex-col items-center gap-12" >
+             <Suspense fallback={<div>Loading...</div>}>
+                <AnimeDetail beatmapset_id={Number(params?.beatmapset_id)} />
+            </Suspense> 
+        </div>
+    </div>
 
 }

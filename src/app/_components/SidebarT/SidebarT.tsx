@@ -49,6 +49,7 @@ const Sidebar = ({
           onMouseLeave={() => !isTouching && setIsHoveringOsuLogo(false)}
           href={"/"} about="Home" className="flex w-full flex-row items-center justify-start gap-4 text-slate-50">
           <Image
+            unoptimized
             src="https://osu.ppy.sh/assets/images/osu-logo-white.59d385da.svg"
             alt="Osu Logo"
             width={80}

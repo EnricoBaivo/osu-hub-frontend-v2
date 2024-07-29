@@ -10,10 +10,11 @@ export const SkeltonCardBeatmapsetBanner = ({
   height?: number | string;
 
 }) => (
-  <div className={clsx(`relative flex w-[${width}px] min-h-[${height}px] rounded-4xl`)}>
+  <div style={{width:width,height:height}} className={clsx(`relative flex   rounded-4xl`)}>
     <div className="relative flex w-full overflow-hidden rounded-4xl h-full shadow-xl border-slate-700 border">
       <div className="absolute w-full h-3/4">
         <Image
+          unoptimized
           className="blur-sm"
           src={"/defaultBeatmapBanner.png"}
           alt="loadingImage"

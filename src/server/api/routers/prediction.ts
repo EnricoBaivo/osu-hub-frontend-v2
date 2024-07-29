@@ -207,7 +207,7 @@ export const predictionRouter = createTRPCRouter({
         if (!data.beatmap_id || !data.mods) {
           return null;
         }
-        const query2 = await ctx.db.prediction.findFirst({
+        return ctx.db.prediction.findFirst({
           where: { beatmap_id: data.beatmap_id },
           include: {
             beatmapset: {
@@ -220,7 +220,6 @@ export const predictionRouter = createTRPCRouter({
             },
           },
         });
-        return query2;
       });
       const da = await Promise.all(mapdata);
       const pp = getPercentiles(arr_pp);
@@ -244,7 +243,6 @@ export const predictionRouter = createTRPCRouter({
       const star = getPercentiles(
         da.map((data) => data?.mods_prediction[0]?.stars ?? 0),
       );
-
       return {
         pp,
         acc,

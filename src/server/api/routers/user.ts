@@ -50,6 +50,7 @@ export const userRouter = createTRPCRouter({
 
       try {
         const user = await client.users.getUser(input.osu_user_id, {
+         
           urlParams: {
             mode: "osu",
           },

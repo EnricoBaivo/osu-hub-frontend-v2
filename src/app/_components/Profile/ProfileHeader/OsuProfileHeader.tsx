@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import ChartContainer from "../RankHeighestChart/ChartContainer";
 import SupporterHearts from "../Supporter/SupporterHearts";
@@ -94,6 +94,7 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
           )}
         >
           <Image
+            unoptimized
             src={avatar_url}
             alt="avatar"
             className="rounded-full"
@@ -180,8 +181,10 @@ const OsuProfileHeader = async ({ osu_user_id }: { osu_user_id: number }) => {
         {user_page && <UserPageHtml html={user_page.html || user_page.raw} />}
       </div>
 
+      <Suspense fallback={<div>getting Medals...</div>}>
 
-      <UserMedals userAchievments={user?.user_achievements} onlyReached />
+        <UserMedals userAchievments={user?.user_achievements} onlyReached />
+      </Suspense>
     </div>
   );
 };

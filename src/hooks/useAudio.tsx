@@ -143,8 +143,8 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
                 className='fixed z-50 bg-osuhub-dark-ice-grey bottom-0 right-10 w-[375px] h-[175px] border border-slate-500  backdrop-blur-xl text-white rounded-lg overflow-hidden flex flex-col justify-between'
             >
                 <Image
-                    quality={100}
                     unoptimized
+                    quality={100}
                     fill
                     style={{
                         objectFit: 'cover'

@@ -1,15 +1,17 @@
 "use client"
+import { useContainerIsHovered } from "@/hooks/useHoverContainer";
 import { AnimatePresence, motion } from "framer-motion";
 
 
 export interface InfoNodgesProps {
   children: React.ReactNode
-  isInView: boolean
 }
 
-const InfoNodges = ({ children, isInView }: InfoNodgesProps) => {
+const InfoNodges = ({ children }: InfoNodgesProps) => {
+
+  const isHovered = useContainerIsHovered()
   return (<AnimatePresence  >
-    {isInView &&
+    {isHovered &&
       <motion.div initial={{
         opacity: 0,
         y: -100

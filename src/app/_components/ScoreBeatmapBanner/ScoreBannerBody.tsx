@@ -10,7 +10,6 @@ interface ScoreBannerBodyProps {
     infoNodges: InfoNodgesProps;
     beatmapMetaData: beatmapMetaDataType;
     score_id: number;
-    isOnScore: boolean;
     reached_rank: string;
 }
 const ScoreBannerBody = (props: ScoreBannerBodyProps) => {
@@ -36,7 +35,6 @@ const ScoreBannerBody = (props: ScoreBannerBodyProps) => {
             }
 
             <DifficultyAttributesOverlay
-                isInView={props.isOnScore}
                 key={props.score_id + "DifficultyAttributesOverlay"}
                 ar={props.DifficultyAttributesOverlay.ar}
                 pr={props.DifficultyAttributesOverlay.pr}

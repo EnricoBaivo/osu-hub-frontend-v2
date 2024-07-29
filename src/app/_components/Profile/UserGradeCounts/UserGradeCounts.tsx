@@ -9,7 +9,7 @@ const UserGradeCount = ({ grade, count }: { grade: string, count: number }) => {
     className="items-bottom flex w-28 flex-col gap-2 items-center justify-end"
     key={grade}
   >
-    <Image src={`/grades/${grade.toLowerCase()}.svg`} alt={grade} width={60} height={40} />
+    <Image unoptimized src={`/grades/${grade.toLowerCase()}.svg`} alt={grade} width={60} height={40} />
     <span className=" text-2xl text-white" >{Number(count)}  </span>
   </div >
 }

@@ -11,6 +11,7 @@ const handler = (req: NextRequest) =>
     req,
     router: appRouter,
     createContext: () => createTRPCContext({ req }),
+    
     onError:
       env.NODE_ENV === "development"
         ? ({ path, error }) => {

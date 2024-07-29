@@ -1,7 +1,7 @@
 "use client"
 import { api } from "@/trpc/react";
 import React from "react";
-import type { BeatmapRecommendationState } from "./UserBeatmapRecommendations";
+import type { BeatmapRecommendationState } from "./UserRecommendationsFilter";
 
 import BeatmapBannerRecommendation from "./BeatmapBannerRecommendation";
 import ScrollToTopButton from "../../_components/UI/Button/ScrollToTopButton";

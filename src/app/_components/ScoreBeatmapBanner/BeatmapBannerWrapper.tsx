@@ -11,18 +11,15 @@ const BeatmapBannerWrapper = (props: {
     score_type: string,
     scoreBeatmapFooterData: ScoreBeatmapFooterProps,
     beatmapMetaData: beatmapMetaDataType,
-    isOnScore: boolean
 
 }) => {
 
     return <div
-
         className="flex w-full h-full flex-col"
     >
         <BeatmapBannerBody
 
             beatmapMetaData={props.beatmapMetaData}
-            isOnScore={props.isOnScore}
             DifficultyAttributesOverlay={props.DifficultyAttributesOverlay}
             infoNodges={props.infoNodges}
             score_id={props.score_id}

@@ -14,7 +14,7 @@ export default async function Home() {
   const session = await auth();
 
   if (!session?.user) {
-    redirect("/api/auth/signin");
+    redirect("/auth/login");
   }
   const secret_massage = await api.user.getSecretMessage.query()
   let userRole = "Your on the way";
@@ -52,7 +52,7 @@ export default async function Home() {
           </div>
           }
           <Link
-            href={session ? "/api/auth/signout" : "/api/auth/signin"}
+            href={session ? "/api/auth/signout" : "/auth/login"}
             className="rounded-full bg-osuhub-dark-ice-blue px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
           >
             {session ? "Sign out" : "Sign in"}

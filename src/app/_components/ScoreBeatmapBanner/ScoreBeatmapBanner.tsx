@@ -8,12 +8,12 @@ import {
 } from "./DifficultyAttributesOverlay/DifficultyAttributesOverlay";
 
 import { motion } from "framer-motion";
-import ScoreBeatmapFooter, { type ScoreBeatmapFooterProps } from "./ScoreBeatmapFooter";
 import { FallBackImage } from "../UI/OsuImage/FallbackImage";
-import BeatmapBannerBody from "./ScoreBannerBody";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { beatmapMetaDataType } from "@/hooks/useAudio";
 import BeatmapBannerWrapper from "./BeatmapBannerWrapper";
+import { ScoreBeatmapFooterProps } from "./ScoreBeatmapFooter";
+import HoverContainerProvider from "@/hooks/useHoverContainer";
 
 
 export interface ScoreBeatmapBannerProps {
@@ -31,13 +31,10 @@ export interface ScoreBeatmapBannerProps {
   beatmapMetaData: beatmapMetaDataType
 }
 
-const ScoreBeatmapBanner = (props: ScoreBeatmapBannerProps) => {
-  const [isOnScore, setIsOnScore] = useState(false)
+const ScoreBeatmapBanner = memo((props: ScoreBeatmapBannerProps) => {
   return (
-    <motion.div
-      onMouseEnter={() => setIsOnScore(true)}
-      onMouseLeave={() => setIsOnScore(false)}
-      className="relative flex w-[900px] h-[700px] rounded-4xl  shadow-xl border-slate-700 border  ">
+    <HoverContainerProvider
+      className="relative flex w-[900px] h-[700px] rounded-4xl shadow-xl border-slate-700 border ">
       <div className="relative flex w-full overflow-hidden  rounded-4xl h-full shadow-xl border-slate-700 border  ">
         <div className="absolute w-full h-4/6" >
           <FallBackImage
@@ -59,7 +56,6 @@ const ScoreBeatmapBanner = (props: ScoreBeatmapBannerProps) => {
           />
         </div>
         <BeatmapBannerWrapper
-          isOnScore={isOnScore}
           DifficultyAttributesOverlay={props.DifficultyAttributesOverlay}
           infoNodges={props.infoNodges}
           reached_rank={props.reached_rank}
@@ -74,10 +70,10 @@ const ScoreBeatmapBanner = (props: ScoreBeatmapBannerProps) => {
           passed={props.scoreBeatmapBannerSuccedStatusData.passed}
         />
       </div>
-    </motion.div >
+    </HoverContainerProvider >
   );
 
 
-};
+});
 
 export default ScoreBeatmapBanner;
