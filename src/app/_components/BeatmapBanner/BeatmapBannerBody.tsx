@@ -15,12 +15,11 @@ const BeatmapBannerBody = (props: BeatmapBannerBodyProps) => {
 
     return <div
         className="relative flex flex-row h-full w-full justify-between ">
-        <div className="flex flex-col  ">
+        <div className="flex flex-col">
             <ScoreBannerHeaderWithPlay
                 beatmapMetaData={props.beatmapMetaData}
             />
             <InfoNodges
-                isInView={props.infoNodges.isInView}
                 key={props.beatmapMetaData.title + props.beatmapMetaData.version + "infoNodge"}
             >
                 {props.infoNodges.children}

@@ -51,7 +51,6 @@ const BeatmapBannerRecommendation = ({ beatmapRec }: { beatmapRec: getBeatmapByI
         // max_pp: beatmap_predictions?.pp ?? 0,
         infoNodges={
             {
-                isInView: true,
                 children: <>
                     <InfoNodge>
                         <span>MAX COMBO {beatmap.data?.max_combo} </span>
