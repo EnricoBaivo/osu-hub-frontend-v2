@@ -23,9 +23,7 @@ export default async function DashboardLayout({
 
   return (
       <main className="flex overflow-y-auto relative w-full flex-col items-center bg-gradient-to-b from-osuhub-dark-ice-grey to-osuhub-dark-ice-blue text-white">
-        <Suspense fallback={<OsuProfileHeaderSkeleton />}>
-          <OsuProfileHeader osu_user_id={osu_user_id} />
-        </Suspense>
+        
         {children}
         <Footer title="OSU HUB" />
       </main>
