@@ -28,7 +28,6 @@ export default async function DashboardLayout({
         </Suspense>
         {children}
         <Footer title="OSU HUB" />
-
       </main>
   );
 }
