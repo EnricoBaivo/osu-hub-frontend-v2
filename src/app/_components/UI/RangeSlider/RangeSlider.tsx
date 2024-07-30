@@ -3,21 +3,6 @@ import * as Slider from '@radix-ui/react-slider';
 import Style from './index.module.css';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
-
-interface Props {
-  default: [number, number];
-  step: number;
-  minStepsBetweenThumbs: number;
-  range: [number, number];
-  className?: string;
-  title?: string;
-  anker?: string;
-  disabled?: boolean;
-  callback: (e: number[]) => void;
-  convertDisplayValue?: (e: number) => string;
-}
-type Range = [number, number];
-
 function invertValue(value: number) {
   if (value <= 1) {
     return 25;
@@ -53,61 +38,84 @@ function calculateMinRange(currValue: Range, rangeValue: Range): Range {
 
   return [Math.floor(newMin), Math.floor(newMax)];
 }
+type Range = [number, number];
+
+
+interface Props {
+  default: number[] | number;
+  minStepsBetweenThumbs?: number;
+  step: number;
+  range: number[];
+  className?: string;
+  title?: string;
+  anker?: string;
+  disabled?: boolean;
+  callback: (e: number[] ) => void;
+  convertDisplayValue?: (e: number) => string;
+}
+
+
+const SliderThumb = (props: { convertDisplayValue?: (e: number) => string, anker?: string, value?: number }) => {
+  return (
+    <Slider.Thumb className={clsx(Style.SliderThumb, "border-slate-500 shadow-xl backdrop-blur-lg bg-osuhub-gray shadow-black hover:bg-indigo-500 focus:bg-indigo-600 hover:shadow-sm")}>
+      <div className='pt-4 text-center'>
+        <span className={"text-base"}>
+          {props.convertDisplayValue !== undefined ? props.convertDisplayValue(props.value ?? 0) : props.value}
+        </span>
+        {props.anker && <span className={"font-mono text-sm "}>{props.anker}</span>}
+      </div>
+    </Slider.Thumb>
+  );
+}
+
 const RangeSlider = (props: Props) => {
-  const [value, setValue] = React.useState<[number, number]>(props.default);
-  const memoizedMinRange = useMemo(() => calculateMinRange(value, props.range), [value, props.range]);
+  const [value, setValue] = React.useState<number[] | number>(props.default);
+
+  const MemorizedRangeSlider = useMemo(() => {
+    if (typeof value === 'number') {
+      return <SliderThumb convertDisplayValue={props.convertDisplayValue} anker={props.anker} value={value} />
+    } else {
+      return (
+        <>
+          <SliderThumb convertDisplayValue={props.convertDisplayValue} anker={props.anker} value={value[0]} />
+          <SliderThumb convertDisplayValue={props.convertDisplayValue} anker={props.anker} value={value[1]} />
+        </>
+      );
+    }
+  }, [value, props]);
+
+  const handleValueChange = (e: number[] | number) => {
+    setValue(e);
+    // Wrapping the callback argument to match the expected updater function signature
+    if (Array.isArray(e)) {
+      props.callback(e);
+    } else {
+      props.callback([e]);
+    }
+  };
+
 
   return (
-    <div className={clsx(props.className, "flex min-w-44 font-exo items-center h-20 justify-center rounded-xl p-5 bg-osuhub-gray",
-      props.disabled ? "opacity-50 " : "opacity-100"
-
-    )}>
-      <div className={"pr-4 flex-shrink pl-4 text-lg"} >{props.title}</div>
+    <div className={clsx(props.className, "flex min-w-44 font-exo items-center h-20 justify-center rounded-xl p-5 bg-osuhub-gray", props.disabled ? "opacity-50" : "opacity-100")}>
+      <div className={"pr-4 flex-shrink pl-4 text-lg"}>{props.title}</div>
       <Slider.Root
         disabled={props.disabled ?? false}
         step={props.step}
         min={props.range[0]}
         max={props.range[1]}
         minStepsBetweenThumbs={props.minStepsBetweenThumbs}
-        onValueChange={(e: [number, number]) => {
-          setValue([e[0], e[1]]);
-          props.callback(e)
-        }
-        }
-        className={clsx("flex flex-grow z-20 h-14 relative   items-center select-none touch-none backdrop-blur-lg ")}
+        className={clsx("flex flex-grow z-20 h-14 relative items-center select-none touch-none backdrop-blur-lg")}
         orientation="horizontal"
-        defaultValue={props.disabled ? props.range : props.default}>
-        <Slider.Track
-          className={clsx(Style.SliderTrack, "bg-osuhub-dark-ice-grey")}>
+        onValueChange={handleValueChange}
+        defaultValue={typeof props.default === 'number' ? [props.default] : props.default}
+      >
+        <Slider.Track className={clsx(Style.SliderTrack, "bg-osuhub-dark-ice-grey")}>
           <Slider.Range className={clsx(Style.SliderRange, "bg-white")} />
         </Slider.Track>
-        <Slider.Thumb className={clsx(Style.SliderThumb, " border-slate-500 shadow-xl backdrop-blur-lg bg-osuhub-gray shadow-black hover:bg-indigo-500 hover:shadow-sm")} >
-          <div className='pt-4  text-center'>
-            <span className={"text-base"}>
-              {
-                props.convertDisplayValue !== undefined ?
-                  props.convertDisplayValue(value[0] ?? 0) : value[0]
-              }
-            </span>
-            {props.anker && !props.disabled && <span className={"font-mono text-sm "}>{props.anker}</span>}
-          </div>
-        </Slider.Thumb>
-        <Slider.Thumb className={clsx(Style.SliderThumb, "border-slate-500 shadow-xl backdrop-blur-lg bg-osuhub-gray shadow-black hover:bg-indigo-500 hover:shadow-sm focus:bg-indigo-600")} >
-          <div className='pt-4  text-center'>
-
-            <span className={"text-base"}>
-              {
-                props.convertDisplayValue !== undefined ?
-                  props.convertDisplayValue(value[1] ?? 0) : value[1]
-              }
-            </span>
-            {props.anker && <span className={"font-mono text-sm "}>{props.anker}</span>}
-          </div>
-        </Slider.Thumb>
+        {MemorizedRangeSlider}
       </Slider.Root>
-
-    </div >
+    </div>
   );
-};
+}
 
 export default RangeSlider;

@@ -77,11 +77,28 @@ export const predictionRouter = createTRPCRouter({
         sort_for_latest: z.optional(z.boolean()),
         sort_for_animie: z.optional(z.boolean()),
         mods: z.optional(z.number()),
-        cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
+        cursor: z.number().nullish(),
+        displayOnlyUnplayedPredictions: z.boolean(),
+        displayOnlyUnplayedBeatmapsWithAcuuracyAbove: z.number(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      console.log(input.mods);
+      const userscoreCondition = {
+        userscore: {
+          none: {
+            AND: [
+              {
+                osu_user_id: ctx.session.user.osu_user_id,
+              },
+              {
+                accuracy: {
+                  gte: input.displayOnlyUnplayedBeatmapsWithAcuuracyAbove / 100,
+                },
+              },
+            ],
+          },
+        },
+      };
       const limit = input.limit ?? 6;
       const cursor = input.cursor ?? 0;
       const res = await ctx.db.prediction.findMany({
@@ -92,6 +109,7 @@ export const predictionRouter = createTRPCRouter({
           id: { gte: cursor },
           mode: 0,
 
+          ...(input.displayOnlyUnplayedPredictions && userscoreCondition),
           beatmapset: {
             genre_name: input.sort_for_animie
               ? {
@@ -167,6 +185,7 @@ export const predictionRouter = createTRPCRouter({
 
         // skip: 1,
       });
+      console.log(res);
       let nextCursor: typeof cursor | undefined = undefined;
       if (res.length > limit) {
         const nextItem = res.pop();

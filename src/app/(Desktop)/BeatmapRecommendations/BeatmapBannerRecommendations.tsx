@@ -45,6 +45,8 @@ const BeatmapBannerRecommendations: React.FC<BeatmapBannerRecommendationsProps> 
         sort_for_latest: BeatmapRecommendationState.sortForLatest,
         sort_for_animie: BeatmapRecommendationState.sortForAnimie,
         mods: BeatmapRecommendationState.mods,
+        displayOnlyUnplayedPredictions: BeatmapRecommendationState.displayOnlyUnplayedPredictions,
+        displayOnlyUnplayedBeatmapsWithAcuuracyAbove: BeatmapRecommendationState.displayOnlyUnplayedBeatmapsWithAcuuracyAbove[0] ?? 0,
         limit: 5
     }
         , {

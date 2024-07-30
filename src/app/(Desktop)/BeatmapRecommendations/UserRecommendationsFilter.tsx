@@ -1,5 +1,5 @@
 "use client"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ButtonNodge from "../../_components/UI/Button/ButtonNodge";
 import RangeSlider from "../../_components/UI/RangeSlider/RangeSlider";
 import type { UserPrediction } from "@/server/api/routers/beatmapset";
@@ -26,6 +26,8 @@ export type BeatmapRecommendationState = {
     sortForAnimie: boolean;
     duration: number[];
     mods: number;
+    displayOnlyUnplayedPredictions: boolean;
+    displayOnlyUnplayedBeatmapsWithAcuuracyAbove: number[];
 };
 const UserRecommendationsFilter = ({ userPrediction }: { userPrediction: UserPrediction }) => {
     const initialBeatmapPredictionState = {
@@ -41,12 +43,23 @@ const UserRecommendationsFilter = ({ userPrediction }: { userPrediction: UserPre
         sortForLatest: false,
         sortForAnimie: false,
         duration: [40, 80],
-        mods: 0
+        mods: 0,
+        displayOnlyUnplayedPredictions: false,
+        displayOnlyUnplayedBeatmapsWithAcuuracyAbove: [0],
+
     };
     const [beatmapState, setBeatmapState] = useState(initialBeatmapPredictionState);
     const beatmapTempState = useRef(initialBeatmapPredictionState);
 
-
+    useEffect(() => {
+        if (beatmapState.displayOnlyUnplayedBeatmapsWithAcuuracyAbove[0] === 0) {
+            beatmapState.displayOnlyUnplayedPredictions = false;
+            console.log("updated")
+        }
+        else {
+            beatmapState.displayOnlyUnplayedPredictions = true;
+        }
+    }, [beatmapState]);
     const updateTempBeatmapState = (
         key: keyof BeatmapRecommendationState,
         updater: (prevState: BeatmapRecommendationState[keyof BeatmapRecommendationState]) => BeatmapRecommendationState[keyof BeatmapRecommendationState]
@@ -125,12 +138,29 @@ const UserRecommendationsFilter = ({ userPrediction }: { userPrediction: UserPre
                     default={[Math.floor(userPrediction.bpm[0.5] ?? 0), Math.ceil(userPrediction.bpm[0.99] ?? 10)]}
                     range={[60, 350]} step={30} minStepsBetweenThumbs={0.4} />
 
-                <DurationFilter defaultV={beatmapState.duration}
-                    updateDurationFilter={(e) => updateTempBeatmapState("duration", () => e)} />
 
-                <ButtonNodge type="button" className="grow" onClick={() => setBeatmapState(() => { return beatmapTempState.current })}>
-                    {"Update"}
-                </ButtonNodge>
+
+                {/** TODO:
+                 * - Add a filter for displayOnlyUnplayedPredictions
+                 * - Add a filter for displayOnlyUnplayedBeatmapsWithAcuuracyAbove
+                 */}
+
+                <RangeSlider className={"w-1/4"}
+                    callback={
+                        (e) => updateTempBeatmapState("displayOnlyUnplayedBeatmapsWithAcuuracyAbove", () => {
+                            if (Array.isArray(e)) {
+                                return e;
+                            } else {
+                                return [e];
+                            }
+                        }
+                        )}
+                    anker={"%"}
+
+                    title={"Filter out played beatmapsets by accuracy"}
+                    default={initialBeatmapPredictionState.displayOnlyUnplayedBeatmapsWithAcuuracyAbove}
+                    range={[0, 100]} step={10} minStepsBetweenThumbs={0.4} />
+
                 <ScoreMods mods={["HardRock", "NoMod", "Easy", "Hidden", "DoubleTime", "Flashlight"]} setActive={(e) => {
                     const modsNumerical = e.map(mod => Mods.fromString(mod));
                     console.log(e, modsNumerical);
@@ -150,6 +180,15 @@ const UserRecommendationsFilter = ({ userPrediction }: { userPrediction: UserPre
                 }}>
                     {beatmapState.sortForAnimie ? "all beatmaps" : "animie beatmaps"}
                 </ButtonNodge>
+
+                <DurationFilter defaultV={beatmapState.duration}
+                    updateDurationFilter={(e) => updateTempBeatmapState("duration", () => e)} />
+                <div className="w-full flex items-center justify-center">
+                    <ButtonNodge type="button" className="" onClick={() => setBeatmapState(() => { return beatmapTempState.current })}>
+                        {"Update"}
+                    </ButtonNodge>
+                </div>
+
             </div >
 
 

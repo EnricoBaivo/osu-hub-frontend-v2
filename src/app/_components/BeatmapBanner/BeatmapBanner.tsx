@@ -10,6 +10,7 @@ import BeatmapFooter, { type BeatmapFooterProps } from "./BeatmapFooter";
 import { FallBackImage } from "../UI/OsuImage/FallbackImage";
 import ScoreBannerBody from "./BeatmapBannerBody";
 import { beatmapMetaDataType } from "@/hooks/useAudio";
+import HoverContainerProvider from "@/hooks/useHoverContainer";
 
 
 export interface beatmapBannerProps {
@@ -26,8 +27,9 @@ export interface beatmapBannerProps {
 }
 const BeatmapBanner = (props: beatmapBannerProps) => {
   return (
-    <div
+    <HoverContainerProvider
       className="flex w-[48%] min-w-[980px] justify-center items-center ">
+
       <motion.div
         className="relative flex w-full rounded-4xl h-[550px] shadow-xl border-slate-700 border  ">
         <div className="relative flex w-full overflow-hidden  rounded-4xl h-full shadow-xl border-slate-700 border  ">
@@ -66,7 +68,7 @@ const BeatmapBanner = (props: beatmapBannerProps) => {
           </div>
         </div>
       </motion.div >
-    </div >
+    </HoverContainerProvider>
 
   );
 };

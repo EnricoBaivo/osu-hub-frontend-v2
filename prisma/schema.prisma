@@ -122,13 +122,14 @@ model prediction {
   id              BigInt            @id() @default(autoincrement())
   max_combo       Int?
   duration        Int?
-  beatmap_id      BigInt?
+  beatmap_id      BigInt?           @unique
   beatmapset_id   BigInt?
   mode            Int?
   last_update     DateTime?         @default(dbgenerated("NOW()")) @db.DateTime
   mods_prediction mods_prediction[]
   beatmap         beatmap?          @relation(fields: [beatmap_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__predictio__beatm__24B26D99")
   beatmapset      beatmapset?       @relation(fields: [beatmapset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__predictio__beatm__25A691D2")
+  userscore       userscore[]
 
   @@index([beatmap_id], map: "ix_prediction_beatmap_id")
   @@index([beatmapset_id], map: "ix_prediction_beatmapset_id")
@@ -233,6 +234,8 @@ model userscore {
   type                String?          @db.VarChar(555)
   osu_user_id         BigInt?
   beatmap_id          BigInt?
+  prediction_id       BigInt?
+  prediciton          prediction?      @relation(fields: [prediction_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   beatmapset_id       BigInt?
   mode_id             Int?
   score_weight_id     BigInt?

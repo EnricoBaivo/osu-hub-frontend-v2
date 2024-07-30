@@ -22,7 +22,6 @@ const ScoreBannerBody = (props: ScoreBannerBodyProps) => {
             />
 
             <InfoNodges
-                isInView={props.isOnScore}
                 key={props.score_id + "infoNodge"}
 
             >
