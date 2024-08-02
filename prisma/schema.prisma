@@ -32,10 +32,9 @@ model acc_prediction {
 }
 
 model animie_reference {
-  id           Int          @id() @unique() @default(autoincrement())
+  id           Int          @id() @unique()
   name         String?      @db.VarChar(555)
   ani_list_url String?      @db.VarChar(555)
-  anilist_id   Int?
   beatmapset   beatmapset[]
 }
 
@@ -66,8 +65,9 @@ model beatmapset {
 
   anilist_checked  Boolean?
   description      Json?
-  animie_reference animie_reference? @relation(fields: [anilist_id], references: [id]) // Many-to-one relation
   anilist_id       Int? // Optional integer for relation
+
+  animie_reference animie_reference? @relation(fields: [anilist_id], references: [id]) // Many-to-one relation
 
   acc_prediction  acc_prediction[]
   mods_prediction mods_prediction[]
