@@ -90,7 +90,7 @@ export const beatmapsetRouter = createTRPCRouter({
         }
     `;
 
-      const variables = { id: anilist?.anilist_id };
+      const variables = { id: anilist?.id };
 
       try {
         const response = await fetch("https://graphql.anilist.co", {

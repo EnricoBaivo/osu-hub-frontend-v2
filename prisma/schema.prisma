@@ -66,7 +66,6 @@ model beatmapset {
   anilist_checked  Boolean?
   description      Json?
   anilist_id       Int? // Optional integer for relation
-
   animie_reference animie_reference? @relation(fields: [anilist_id], references: [id]) // Many-to-one relation
 
   acc_prediction  acc_prediction[]
