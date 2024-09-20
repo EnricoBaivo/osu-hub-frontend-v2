@@ -10,6 +10,7 @@ import Link from "next/link";
 import type { LinkData, UserRole } from "@/static-data/linkData";
 import { usePathname } from "next/navigation";
 import { useDimensions } from "@/hooks/useDimensions";
+import KofiWidget from "../UI/Kofi/KofiWidget";
 
 const Sidebar = ({
   userData,
@@ -80,6 +81,7 @@ const Sidebar = ({
           ))}
         </div>
 
+   
 
         {/* Profile Button BUTTON */}
         <ProfileButtonWithLogout

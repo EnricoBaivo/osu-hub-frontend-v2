@@ -20,6 +20,10 @@ const config = {
         protocol: "https",
         hostname: "a.ppy.sh",
         pathname: "/**",
+      },      {
+        protocol: "https",
+        hostname: "storage.ko-fi.com",
+        pathname: "/**",
       },
       {
         protocol: "https",

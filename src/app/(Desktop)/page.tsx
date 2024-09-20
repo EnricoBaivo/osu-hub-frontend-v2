@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 import { api } from "@/trpc/server";
@@ -9,7 +8,9 @@ import { FaDiscord } from "react-icons/fa";
 import { Headline } from "@/app/_components/UI/Typography/Headline";
 import { redirect } from "next/navigation";
 import { env } from "@/env.mjs";
-
+import Script from "next/script";
+import KofiWidget from "../_components/UI/Kofi/KofiWidget";
+const kofiData = { 'type': 'floating-chat', 'floating-chat.donateButton.text': 'Support me', 'floating-chat.donateButton.background-color': '#323842', 'floating-chat.donateButton.text-color': '#fff' }
 export default async function Home() {
   const session = await auth();
 
@@ -34,7 +35,7 @@ export default async function Home() {
             osu! <span className="text-[hsl(280,100%,70%)]">HUB</span>
           </h1>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-8">
 
           {session && <div className="flex flex-col items-center justify-center gap-2">
             <Headline headlineNumber={2} classNames="inline-block ">
@@ -43,14 +44,17 @@ export default async function Home() {
               </span>
             </Headline>
 
-            <Link target="_blank" className="w-72 h-20 gap-1 text-2xl uppercase font-black my-12 hover:scale-110 transition-all flex flex-row items-center justify-around px-4 py-2 text-indigo-500 hover:text-yellow-500 bg-osuhub-dark-ice-blue border rounded-md backdrop-blur-2xl " href={env.NEXT_PUBLIC_DISCORD_INVITE_LINK}>
+            <Link target="_blank" className="w-72 h-20 gap-1 text-2xl uppercase font-black hover:scale-110 transition-all flex flex-row items-center justify-around px-4 py-2 text-indigo-500 hover:text-yellow-500 bg-osuhub-dark-ice-blue border rounded-md backdrop-blur-2xl " href={env.NEXT_PUBLIC_DISCORD_INVITE_LINK}>
               <span className="text-4xl">
                 <FaDiscord />
               </span>
               <span >{(session?.user?.is_admin) ?? (session?.user?.is_alpha_tester) ?? (session?.user?.is_beta_tester) ? "Improve us" : "alpha access"}</span>
             </Link>
+
           </div>
           }
+          <KofiWidget />
+
           <Link
             href={session ? "/api/auth/signout" : "/auth/login"}
             className="rounded-full bg-osuhub-dark-ice-blue px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
@@ -58,6 +62,7 @@ export default async function Home() {
             {session ? "Sign out" : "Sign in"}
           </Link>
         </div>
+
       </div>
     </div>
   </main >
