@@ -8,13 +8,9 @@ import { redirect } from "next/navigation";
 
 
 
-export const metadata = {
-  title: "OSU HUB ",
-  description: "OSU HUB - for the huge pp",
-};
+
 export default async function RootLayout({
   children,
-
 }: {
   children: React.ReactNode;
 }) {

@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { env } from "@/env.mjs";
 import Script from "next/script";
 import KofiWidget from "../_components/UI/Kofi/KofiWidget";
-const kofiData = { 'type': 'floating-chat', 'floating-chat.donateButton.text': 'Support me', 'floating-chat.donateButton.background-color': '#323842', 'floating-chat.donateButton.text-color': '#fff' }
+
 export default async function Home() {
   const session = await auth();
 
