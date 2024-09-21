@@ -11,7 +11,6 @@ import { redirect } from "next/navigation";
 export const metadata = {
   title: "OSU HUB ",
   description: "OSU HUB - for the huge pp",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 export default async function RootLayout({
   children,

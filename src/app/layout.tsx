@@ -28,7 +28,14 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
+
     <html lang="en">
+      <link
+        rel="icon"
+        href="/icon?<generated>"
+        type="image/<generated>"
+        sizes="<generated>"
+      />
       <body
         className={`relative font-sans ${exo2.variable}${inter.variable} flex h-screen w-screen flex-row bg-slate-800 -z-20 overflow-hidden `}      >
         <DefaultBackground />
