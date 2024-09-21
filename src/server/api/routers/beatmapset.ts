@@ -121,6 +121,7 @@ export const beatmapsetRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      console.log(input.beatmapset_id)
       const anilist = await ctx.db.animie_reference.findFirst({
         where: {
           beatmapset: {

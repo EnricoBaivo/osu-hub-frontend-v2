@@ -22,7 +22,7 @@ const ProfileButtonWithLogout = ({
 }) => {
   const [ishoveringAvatar, setHoveringAvatar] = React.useState(false);
   return (
-    <motion.div className="row container flex h-fit  max-w-full items-center text-white ">
+    <motion.div className="row container flex h-[220px]  max-w-full items-center text-white ">
       <AnimatePresence >
         {parentHover &&
           <motion.div initial={{ display: "none", width: "0%", opacity: 0 }} animate={{ width: "100%", display: "flex", transition: { delay: 0.25 }, opacity: 1 }} exit={{ width: "0%", opacity: 0 }} className="flex w-full flex-row items-end justify-between">
